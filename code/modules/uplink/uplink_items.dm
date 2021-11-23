@@ -723,6 +723,7 @@ GLOBAL_LIST_INIT(uplink_items, subtypesof(/datum/uplink_item))
 	desc = "A duffel bag filled with enough 12g ammo to supply an entire team, at a discounted price."
 	item = /obj/item/storage/backpack/duffelbag/syndie/ammo/shotgun
 	cost = 12
+	purchasable_from = UPLINK_NUKE_OPS
 
 /datum/uplink_item/ammo/shotgun/buck
 	name = "12g Buckshot Drum"
