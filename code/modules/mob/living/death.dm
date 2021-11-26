@@ -102,4 +102,8 @@
 	if (client)
 		client.move_delay = initial(client.move_delay)
 
+	var/mob/dead/observer/player_ghost = src.get_ghost(TRUE, TRUE)
+	if (HAS_TRAIT(src, TRAIT_DNR) || !player_ghost?.can_reenter_corpse) //SKYRAT EDIT: DNR & DNR banned people get automatically ghosted from their corpses
+		ghostize(FALSE)
+
 	return TRUE
