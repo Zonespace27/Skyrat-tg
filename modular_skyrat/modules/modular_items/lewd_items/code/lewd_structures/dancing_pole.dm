@@ -149,36 +149,29 @@
 
 /obj/item/polepack
 	name = "pink stripper pole flatpack"
-	desc = "Construction requires a wrench."
+	desc = "It can be quickly unfolded for easy deployment, nifty!"
 	icon = 'modular_skyrat/modules/modular_items/lewd_items/icons/obj/lewd_structures/dancing_pole.dmi'
 	throwforce = 0
 	icon_state = "pole_base"
-	var/unwrapped = 0
 	w_class = WEIGHT_CLASS_HUGE
 
-/obj/item/polepack/attackby(obj/item/P, mob/user, params) //erecting a pole here.
+/obj/item/polepack/attack_self(mob/user, list/modifiers)//erecting a pole here.
 	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		if (!(item_flags & IN_INVENTORY))
-			to_chat(user, span_notice("You begin fastening the frame to the floor and ceiling..."))
-			if(P.use_tool(src, user, 8 SECONDS, volume=50))
-				to_chat(user, span_notice("You assemble the stripper pole."))
-				var/obj/structure/pole/C = new
-				C.loc = loc
-				qdel(src)
-			return
-	else
-		return ..()
+	to_chat(user, span_notice("You begin unfolding the frame, attaching it to the floor and ceiling..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You assemble [src]."))
+		new/obj/structure/pole(get_turf(src))
+		qdel(src)
 
-/obj/structure/pole/attackby(obj/item/P, mob/user, params) //un-erecting a pole. :(
-	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		to_chat(user, span_notice("You begin unfastening the frame from the floor and ceiling..."))
-		if(P.use_tool(src, user, 8 SECONDS, volume=50))
-			to_chat(user, span_notice("You disassemble the stripper pole."))
-			var/obj/item/polepack/C = new
-			C.loc = loc
-			qdel(src)
+/obj/structure/pole/MouseDrop(atom/over, src_location, over_location, src_control, over_control, params)//un-erecting a pole. :(
+	if(!(over == usr))
 		return
-	else
-		return ..()
+	var/mob/user = usr
+	add_fingerprint(user)
+	to_chat(user, span_notice("You begin to fold up the frame, detatching it from the floor and ceiling..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You disassemble [src]."))
+		new/obj/item/polepack(get_turf(src))
+		qdel(src)
+		return
+	return ..()

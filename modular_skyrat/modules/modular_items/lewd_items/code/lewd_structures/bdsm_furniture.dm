@@ -1,32 +1,25 @@
 /obj/structure/bed/bdsm_bed
-	name = "bdsm bed"
+	name = "BDSM bed"
 	desc = "A latex bed with D-rings on the sides. Looks comfortable."
 	icon = 'modular_skyrat/modules/modular_items/lewd_items/icons/obj/lewd_structures/bdsm_furniture.dmi'
 	icon_state = "bdsm_bed"
 	max_integrity = 50
 
 /obj/item/bdsm_bed_kit
-	name = "bdsm bed construction kit"
-	desc = "Construction requires a wrench."
+	name = "BDSM bed construction kit"
+	desc = "It can be quickly unfolded for easy deployment, nifty!"
 	icon = 'modular_skyrat/modules/modular_items/lewd_items/icons/obj/lewd_structures/bdsm_furniture.dmi'
 	throwforce = 0
 	icon_state = "bdsm_bed_kit"
-	var/unwrapped = 0
 	w_class = WEIGHT_CLASS_HUGE
 
-/obj/item/bdsm_bed_kit/attackby(obj/item/P, mob/user, params) //constructing a bed here.
+/obj/item/bdsm_bed_kit/attack_self(mob/user, modifiers)//constructing a bed here.
 	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		if (!(item_flags & IN_INVENTORY))
-			to_chat(user, span_notice("You fasten the frame to the floor and begin to inflate the latex pillows..."))
-			if(P.use_tool(src, user, 8 SECONDS, volume=50))
-				to_chat(user, span_notice("You assemble the bdsm bed."))
-				var/obj/structure/bed/bdsm_bed/C = new
-				C.loc = loc
-				qdel(src)
-			return
-	else
-		return ..()
+	to_chat(user, span_notice("You fasten the frame to the floor and begin to inflate the latex pillows..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You assemble [src]."))
+		new/obj/structure/bed/bdsm_bed(get_turf(src))
+		qdel(src)
 
 /obj/structure/bed/bdsm_bed/post_buckle_mob(mob/living/M)
 	density = TRUE
@@ -38,19 +31,20 @@
 	//Set them back down to the normal lying position
 	M.pixel_y = M.base_pixel_y + M.body_position_pixel_y_offset
 
-/obj/structure/bed/bdsm_bed/attackby(obj/item/P, mob/user, params) //deconstructing a bed. Aww(
-	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		to_chat(user, span_notice("You begin unfastening the frame of bdsm bed and deflating the latex pillows..."))
-		if(P.use_tool(src, user, 8 SECONDS, volume=50))
-			to_chat(user, span_notice("You disassemble the BDSM bed."))
-			var/obj/item/bdsm_bed_kit/C = new
-			C.loc = loc
-			unbuckle_all_mobs()
-			qdel(src)
+/obj/structure/bed/bdsm_bed/MouseDrop(atom/over, src_location, over_location, src_control, over_control, params)//deconstructing a bed. Aww
+	if(!(over == usr))
 		return
-	else
-		return ..()
+	var/mob/user = usr
+	if(user.buckled)
+		return
+	add_fingerprint(user)
+	to_chat(user, span_notice("You begin unfastening the frame of the BDSM bed and deflating the latex pillows..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You disassemble [src]."))
+		new/obj/item/bdsm_bed_kit(get_turf(src))
+		unbuckle_all_mobs()
+		qdel(src)
+	return
 
 /obj/structure/bed/bdsm_bed/Destroy()
 	. = ..()
@@ -261,37 +255,31 @@
 
 /obj/item/x_stand_kit
 	name = "xstand construction kit"
-	desc = "Construction requires a wrench."
+	desc = "It can be quickly unfolded for easy deployment, nifty!"
 	icon = 'modular_skyrat/modules/modular_items/lewd_items/icons/obj/lewd_structures/bdsm_furniture.dmi'
 	throwforce = 0
 	icon_state = "xstand_kit"
-	var/unwrapped = 0
 	w_class = WEIGHT_CLASS_HUGE
 
-/obj/item/x_stand_kit/attackby(obj/item/P, mob/user, params) //constructing a bed here.
+/obj/item/x_stand_kit/attack_self(mob/user, modifiers) //constructing a stand here.
 	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		if (!(item_flags & IN_INVENTORY))
-			to_chat(user, span_notice("You begin fastening the frame to the floor."))
-			if(P.use_tool(src, user, 8 SECONDS, volume=50))
-				to_chat(user, span_notice("You assemble the x-stand."))
-				var/obj/structure/chair/x_stand/C = new
-				C.loc = loc
-				qdel(src)
-			return
-	else
-		return ..()
+	to_chat(user, span_notice("You begin unfolding the frame, attaching it to the floor..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You assemble [src]."))
+		new/obj/structure/chair/x_stand(get_turf(src))
+		qdel(src)
 
-/obj/structure/chair/x_stand/attackby(obj/item/P, mob/user, params) //deconstructing a bed. Aww(
-	add_fingerprint(user)
-	if(istype(P, /obj/item/wrench))
-		to_chat(user, span_notice("You begin unfastening the frame of x-stand..."))
-		if(P.use_tool(src, user, 8 SECONDS, volume=50))
-			to_chat(user, span_notice("You disassemble the x-stand."))
-			var/obj/item/x_stand_kit/C = new
-			C.loc = loc
-			unbuckle_all_mobs()
-			qdel(src)
+/obj/structure/chair/x_stand/MouseDrop(over_object, src_location, over_location)//deconstructing a stand. Aww
+	if(!(over_object == usr))
 		return
-	else
-		return ..()
+	var/mob/user = over_object
+	if(user.buckled)
+		return
+	add_fingerprint(user)
+	to_chat(user, span_notice("You begin unfastening the frame of the x-stand..."))
+	if(do_after(user, 8 SECONDS, src))
+		to_chat(user, span_notice("You disassemble [src]."))
+		new/obj/item/x_stand_kit(get_turf(src))
+		unbuckle_all_mobs()
+		qdel(src)
+	return

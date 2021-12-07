@@ -449,11 +449,7 @@
 			to_chat(user, span_warning("[src]'s maintenance panel isn't opened!"))
 			return
 	else
-		if(screwdriver_action(user, icon_state, icon_state, W))
-			return
 		if(crowbar_action(W))
-			return
-		if(!cell && wrench_act(user, W))
 			return
 		return ..()
 
@@ -488,10 +484,9 @@
 	else
 		object.forceMove(drop_location())
 
-// Handler for opening the panel with a screwdriver for maintenance
-/obj/structure/chair/milking_machine/proc/screwdriver_action(mob/user, icon_state_open, icon_state_closed, obj/item/I)
-	if(I.tool_behaviour == TOOL_SCREWDRIVER)
-		I.play_tool_sound(src, 50)
+// Handler for opening the panel with AltClick for maintenance
+/obj/structure/chair/milking_machine/AltClick(mob/user)
+	if(do_after(user, 4 SECONDS, src))
 		if(!panel_open)
 			panel_open = TRUE
 			cut_overlay(indicator_overlay)
@@ -515,8 +510,8 @@
 
 			to_chat(user, span_notice("You close the maintenance hatch of [src]."))
 
-		return TRUE
-	return FALSE
+			return TRUE
+		return FALSE
 
 // Object disassembly handler by crowbar
 /obj/structure/chair/milking_machine/proc/crowbar_action(obj/item/I, ignore_panel = 0)
@@ -526,12 +521,6 @@
 		I.play_tool_sound(src, 50)
 		deconstruct(TRUE)
 
-// // Object disassembly handler by wrench
-// /obj/structure/chair/milking_machine/default_unfasten_wrench(mob/user, obj/item/I, time = 20)
-// 	. = !(flags_1 & NODECONSTRUCT_1) && I.tool_behaviour == TOOL_WRENCH
-// 	if(.)
-// 		I.play_tool_sound(src, 50)
-// 		deconstruct(TRUE)
 
 // Machine Workflow Processor
 /obj/structure/chair/milking_machine/process(delta_time)
@@ -542,8 +531,6 @@
 		pump_state = pump_state_list[1]
 		update_all_visuals()
 		return
-//	if(current_mode == mode_list[1] && pump_state == pump_state_list[1])
-//		cell.give(charge_rate * delta_time)
 
 	// Check if the machine should work
 	if(!current_mob)
@@ -659,15 +646,18 @@
 		// The mob for some reason did not get buckled, we do nothing
 		return
 
-/obj/structure/chair/milking_machine/wrench_act(mob/living/user, obj/item/I)
-	if((flags_1 & NODECONSTRUCT_1) && I.tool_behaviour == TOOL_WRENCH)
-		to_chat(user, span_notice("You being to deconstruct [src]..."))
-		if(I.use_tool(src, user, 8 SECONDS, volume=50))
-			I.play_tool_sound(src, 50)
+// Tool-less deconstruction of the milking machine.
+/obj/structure/chair/milking_machine/MouseDrop(over_object, src_location, over_location)
+	if(!(over_object == usr))
+		return ..()
+	var/mob/user = over_object
+	if(flags_1 & NODECONSTRUCT_1)
+		to_chat(user, span_notice("You begin to fold up [src]..."))
+		if(do_after(user, 8 SECONDS, src))
 			deconstruct(TRUE)
 			to_chat(user, span_notice("You disassemble [src]."))
-		return TRUE
-	return TRUE
+		return
+	return ..()
 
 // Machine deconstruction process handler
 /obj/structure/chair/milking_machine/deconstruct(disassembled)
@@ -1017,7 +1007,7 @@
 // Milking machine construction kit
 /obj/item/milking_machine/constructionkit
 	name = "milking machine construction parts"
-	desc = "Construction parts for a milking machine. Assembly requires a wrench."
+	desc = "Construction parts for a milking machine. It can be quickly unfolded for easy deployment, nifty!"
 	icon = 'modular_skyrat/modules/modular_items/lewd_items/icons/obj/lewd_structures/milking_machine.dmi'
 	icon_state = "milkbuild"
 	var/current_color = "pink"
@@ -1033,22 +1023,16 @@
 	icon_state = "[initial(icon_state)]_[current_color]"
 
 // Processor of the process of assembling a kit into a machine
-/obj/item/milking_machine/constructionkit/attackby(obj/item/I, mob/living/carbon/user, params)
+/obj/item/milking_machine/constructionkit/attack_self(mob/user, modifiers)
 	var/M = /obj/structure/chair/milking_machine
-	if(I.tool_behaviour == TOOL_WRENCH)
-		if(user.get_held_items_for_side(LEFT_HANDS) == src || user.get_held_items_for_side(RIGHT_HANDS) == src)
-			return
-		if(get_turf(user) == get_turf(src))
-			return
-		else if(I.use_tool(src, user, 8 SECONDS, volume=50))
-			var/obj/structure/chair/milking_machine/N = new M(src.loc)
-			if(istype(src, /obj/item/milking_machine/constructionkit))
-				if(current_color == "pink")
-					N.machine_color = N.machine_color_list[1]
-					N.icon_state = "milking_pink_off"
-				if(current_color == "teal")
-					N.machine_color = N.machine_color_list[2]
-					N.icon_state = "milking_teal_off"
-			qdel(src)
-			to_chat(user, span_notice("You assemble the milking machine."))
-			return
+	if(do_after(user, 8 SECONDS, src))
+		var/obj/structure/chair/milking_machine/N = new M(get_turf(src))
+		if(istype(src, /obj/item/milking_machine/constructionkit))
+			if(current_color == "pink")
+				N.machine_color = N.machine_color_list[1]
+				N.icon_state = "milking_pink_off"
+			if(current_color == "teal")
+				N.machine_color = N.machine_color_list[2]
+				N.icon_state = "milking_teal_off"
+		to_chat(user, span_notice("You assemble the milking machine."))
+		qdel(src)
