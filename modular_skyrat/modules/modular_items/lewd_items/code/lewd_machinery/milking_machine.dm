@@ -486,6 +486,8 @@
 
 // Handler for opening the panel with AltClick for maintenance
 /obj/structure/chair/milking_machine/AltClick(mob/user)
+	if(user.buckled)
+		return
 	if(do_after(user, 4 SECONDS, src))
 		if(!panel_open)
 			panel_open = TRUE
@@ -1024,15 +1026,13 @@
 
 // Processor of the process of assembling a kit into a machine
 /obj/item/milking_machine/constructionkit/attack_self(mob/user, modifiers)
-	var/M = /obj/structure/chair/milking_machine
 	if(do_after(user, 8 SECONDS, src))
-		var/obj/structure/chair/milking_machine/N = new M(get_turf(src))
-		if(istype(src, /obj/item/milking_machine/constructionkit))
-			if(current_color == "pink")
-				N.machine_color = N.machine_color_list[1]
-				N.icon_state = "milking_pink_off"
-			if(current_color == "teal")
-				N.machine_color = N.machine_color_list[2]
-				N.icon_state = "milking_teal_off"
-		to_chat(user, span_notice("You assemble the milking machine."))
+		var/obj/structure/chair/milking_machine/milk_machine = new(get_turf(src))
+		if(current_color == "pink")
+			milk_machine.machine_color = milk_machine.machine_color_list[1]
+			milk_machine.icon_state = "milking_pink_off"
+		if(current_color == "teal")
+			milk_machine.machine_color = milk_machine.machine_color_list[2]
+			milk_machine.icon_state = "milking_teal_off"
+		to_chat(user, span_notice("You assemble [src]."))
 		qdel(src)
