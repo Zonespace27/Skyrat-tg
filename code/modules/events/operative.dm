@@ -35,4 +35,5 @@
 	message_admins("[ADMIN_LOOKUPFLW(operative)] has been made into lone operative by an event.")
 	log_game("[key_name(operative)] was spawned as a lone operative by an event.")
 	spawned_mobs += operative
+	addtimer(CALLBACK(src, .proc/announce_op), 5 MINUTES) //SKYRAT ADDITION
 	return SUCCESSFUL_SPAWN
