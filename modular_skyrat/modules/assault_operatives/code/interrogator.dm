@@ -143,6 +143,7 @@
 	say("Stage one complete!")
 	minor_announce("SECURITY BREACH DETECTED, NETWORK COMPROMISED! READING COORDINATES...", "GoldenEye Defence Network")
 	timer_id = addtimer(CALLBACK(src, .proc/stage_two), rand(STAGE_PROCESS_TIME_LOWER, STAGE_PROCESS_TIME_UPPER), TIMER_STOPPABLE|TIMER_UNIQUE)
+	SSshuttle.registerHostileEnvironment(SSgoldeneye)
 
 /obj/machinery/interrogator/proc/stage_two()
 	if(!check_requirements())

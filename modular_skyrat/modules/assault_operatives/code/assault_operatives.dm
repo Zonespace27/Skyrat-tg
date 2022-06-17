@@ -153,6 +153,9 @@
 
 	var/mob/living/carbon/human/human_target = owner.current
 
+	SSgoldeneye.alive_goldeneye |= human_target
+	RegisterSignal(human_target, COMSIG_LIVING_DEATH, .proc/operative_death)
+	RegisterSignal(human_target, COMSIG_MOVABLE_Z_CHANGED, .proc/operative_z_check)
 	if(human_target.dna.species.id == "plasmaman" )
 		human_target.set_species(/datum/species/human)
 		to_chat(human_target, span_userdanger("You are now a human!"))
@@ -174,6 +177,13 @@
 	if(assault_team)
 		team_number = assault_team.members.Find(owner)
 	owner.current.forceMove(GLOB.assault_operative_start[((team_number - 1) % GLOB.assault_operative_start.len) + 1])
+
+/datum/antagonist/assault_operative/proc/operative_death()
+	SSgoldeneye -= owner?.current
+	SSgoldeneye.operative_death()
+
+/datum/antagonist/assault_operative/proc/operative_z_check()
+	SSgoldeneye.operative_z_check()
 
 /datum/antagonist/assault_operative/get_preview_icon()
 	if (!preview_outfit)

@@ -25,6 +25,8 @@ SUBSYSTEM_DEF(goldeneye)
 	var/goldeneye_activated = FALSE
 	/// How long until ICARUS fires?
 	var/ignition_time = ICARUS_IGNITION_TIME
+	/// A list of goldeneye agents who have not died at least once
+	var/list/goldeneye_agents_notdead = list()
 
 /// A safe proc for adding a targets mind to the tracked extracted minds.
 /datum/controller/subsystem/goldeneye/proc/extract_mind(datum/mind/target_mind)
@@ -54,6 +56,7 @@ SUBSYSTEM_DEF(goldeneye)
 
 	priority_announce(message, "GoldenEye Defence Network", ANNOUNCER_ICARUS)
 	goldeneye_activated = TRUE
+	SSshuttle.clearHostileEnvironment(SSgoldeneye)
 
 	addtimer(CALLBACK(src, .proc/fire_icarus), ignition_time)
 
@@ -71,6 +74,23 @@ SUBSYSTEM_DEF(goldeneye)
 				return FALSE
 			return TRUE
 	return FALSE
+
+/datum/controller/subsystem/goldeneye/proc/operative_death()
+	if(!length(goldeneye_agents_notdead))
+		SSshuttle.clearHostileEnvironment(SSgoldeneye)
+	else
+		var/goldeneye_on_station
+		for(var/mob/agent as anything in goldeneye_agents_notdead)
+			if(is_station_level(agent.z))
+
+/datum/controller/subsystem/goldeneye/proc/operative_z_check()
+	var/on_station_z = FALSE
+	for(var/mob/agent as anything in goldeneye_agents_notdead)
+		if(is_station_level(agent.z))
+			on_station_z = TRUE
+			break
+	if(!on_station_z)
+		SSshuttle.clearHostileEnvironment(SSgoldeneye)
 
 // Goldeneye key
 /obj/item/goldeneye_key
