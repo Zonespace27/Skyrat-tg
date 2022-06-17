@@ -26,8 +26,9 @@
 	var/spawn_text = "Your mission is to assault NTSS13 and get all of the GoldenEye keys that you can from the heads of staff that reside there. \
 	Use your pinpointer to locate these after you have extracted the GoldenEye key from the head of staff. It will be sent in by droppod. \
 	You must then upload the key to the GoldenEye upload terminal on this GoldenEye station. After you have completed your mission, \
-	The GoldenEye defence network will fall, and we will gain access to Nanotrasen's military systems. Good luck agent. \
-	YOUR PRESENCE WILL BE ANNOUNCED IN APPROXEMATELY 15 MINUTES."
+	The GoldenEye defence network will fall, and we will gain access to Nanotrasen's military systems. \
+	Once the first key has been called down, the shuttle will unable to be called unless all operatives die once, the ICARUS \
+	sunbeam is fired, or when all operatives leave the station and satellite z-levels. Good luck agent."
 	/// A link to our internal pinpointer.
 	var/datum/status_effect/goldeneye_pinpointer/pinpointer
 
@@ -153,7 +154,7 @@
 
 	var/mob/living/carbon/human/human_target = owner.current
 
-	SSgoldeneye.alive_goldeneye |= human_target
+	SSgoldeneye.goldeneye_agents_notdead |= human_target
 	RegisterSignal(human_target, COMSIG_LIVING_DEATH, .proc/operative_death)
 	RegisterSignal(human_target, COMSIG_MOVABLE_Z_CHANGED, .proc/operative_z_check)
 	if(human_target.dna.species.id == "plasmaman" )

@@ -79,14 +79,18 @@ SUBSYSTEM_DEF(goldeneye)
 	if(!length(goldeneye_agents_notdead))
 		SSshuttle.clearHostileEnvironment(SSgoldeneye)
 	else
-		var/goldeneye_on_station
+		var/goldeneye_on_station = FALSE
 		for(var/mob/agent as anything in goldeneye_agents_notdead)
-			if(is_station_level(agent.z))
+			if(is_station_level(agent.z) || is_centcom_level(agent.z))
+				goldeneye_on_station = TRUE
+				break
+		if(!goldeneye_on_station)
+			SSshuttle.clearHostileEnvironment(SSgoldeneye)
 
 /datum/controller/subsystem/goldeneye/proc/operative_z_check()
 	var/on_station_z = FALSE
 	for(var/mob/agent as anything in goldeneye_agents_notdead)
-		if(is_station_level(agent.z))
+		if(is_station_level(agent.z) || is_centcom_level(agent.z))
 			on_station_z = TRUE
 			break
 	if(!on_station_z)
