@@ -167,7 +167,7 @@
 /datum/objective/assassinate/obsessed/update_explanation_text()
 	..()
 	if(target?.current)
-		explanation_text = "Murder [target.name], the [!target_role_type ? target.assigned_role.title : target.special_role]."
+		explanation_text = "Murder [target.name], the [!target_role_type ? target.assigned_role.title : target.special_role] once." //SKYRAT EDIT: clarifiying assassinations
 	else
 		message_admins("WARNING! [ADMIN_LOOKUPFLW(owner)] obsessed objectives forged without an obsession!")
 		explanation_text = "Free Objective"
@@ -179,7 +179,7 @@
 	..()
 	old = find_coworker(target)
 	if(target?.current && old)
-		explanation_text = "Murder [target.name], [old]'s coworker."
+		explanation_text = "Murder [target.name], [old]'s coworker once." //SKYRAT EDIT: clarifying assassination
 	else
 		explanation_text = "Free Objective"
 
