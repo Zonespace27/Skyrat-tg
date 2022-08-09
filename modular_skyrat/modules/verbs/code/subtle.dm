@@ -11,11 +11,8 @@
 	mob_type_blacklist_typecache = list(/mob/living/brain)
 
 /datum/emote/living/subtle/proc/check_invalid(mob/user, input)
-	/* TO DO
-	if(stop_bad_mime.Find(input, 1, 1))
-		to_chat(user, span_danger("Invalid emote."))
+	if(!length(input))
 		return TRUE
-	*/
 	return FALSE
 
 /datum/emote/living/subtle/run_emote(mob/user, params, type_override = null)
@@ -31,7 +28,7 @@
 		to_chat(user, "You cannot send IC messages (muted).")
 		return FALSE
 	else if(!params)
-		subtle_emote = tgui_input_text(user, "Choose an emote to display.", "Subtle", null, MAX_MESSAGE_LEN, TRUE)
+		subtle_emote = tgui_input_text(user, "Choose an emote to display.", "Subtle", null, MAX_MESSAGE_LEN, TRUE, encode = FALSE)
 		if(subtle_emote && !check_invalid(user, subtle_emote))
 			subtle_message = subtle_emote
 		else
@@ -75,11 +72,8 @@
 
 
 /datum/emote/living/subtler/proc/check_invalid(mob/user, input)
-	/* TO DO
-	if(stop_bad_mime.Find(input, 1, 1))
-		to_chat(user, span_danger("Invalid emote."))
+	if(!length(input))
 		return TRUE
-	*/
 	return FALSE
 
 /datum/emote/living/subtler/run_emote(mob/user, params, type_override = null)
@@ -96,7 +90,7 @@
 		to_chat(user, span_warning("You cannot send IC messages (muted)."))
 		return FALSE
 	else if(!subtler_emote)
-		subtler_emote = tgui_input_text(user, "Choose an emote to display.", "Subtler" , null, MAX_MESSAGE_LEN, TRUE)
+		subtler_emote = tgui_input_text(user, "Choose an emote to display.", "Subtler" , null, MAX_MESSAGE_LEN, TRUE, encode = FALSE)
 		if(subtler_emote && !check_invalid(user, subtler_emote))
 			var/list/in_view = get_hearers_in_view(1, user)
 			in_view -= GLOB.dead_mob_list
