@@ -5975,6 +5975,8 @@
 #include "modular_skyrat\modules\repossession_agents\code\bounty_objects.dm"
 #include "modular_skyrat\modules\repossession_agents\code\claim.dm"
 #include "modular_skyrat\modules\repossession_agents\code\claim_category.dm"
+#include "modular_skyrat\modules\repossession_agents\code\repo_claimer_component.dm"
+#include "modular_skyrat\modules\repossession_agents\code\repo_claimer_device.dm"
 #include "modular_skyrat\modules\repossession_agents\code\repo_uplink.dm"
 #include "modular_skyrat\modules\repossession_agents\code\subsystem.dm"
 #include "modular_skyrat\modules\roboclothes\code\robotics_clothing.dm"

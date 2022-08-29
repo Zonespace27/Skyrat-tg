@@ -17,12 +17,13 @@
 /datum/repo_claim
 	var/name = ""
 	var/obj/to_claim_path
-	var/reward_path
+	var/obj/reward_path
 	var/area/claim_location
 	var/mob/living/carbon/human/organ_target
 	var/difficulty_tier
 	var/low_tc_reward = 0
 	var/high_tc_reward = 1
+	var/claimed = FALSE
 	/// Typecache of high-risk locations that give more rewards
 	var/static/list/high_risk_areas = typecacheof(list(/area/station/security, /area/station/command))
 	/// List of high-risk jobs that give more rewards when they're a target
@@ -55,9 +56,9 @@
 		claim_location = select_claim_area()
 	if(repo_target)
 		organ_target = repo_target
-		var/list/organs_n_limbs = organ_target.internal_organs.Copy() + organ_target.bodyparts.Copy() - list(/obj/item/bodypart/head, /obj/item/bodypart/chest) //Make sure this works
+		var/list/organs_n_limbs = organ_target.internal_organs.Copy()// + organ_target.bodyparts.Copy() - list(/obj/item/bodypart/head, /obj/item/bodypart/chest) //Make sure this works
 		to_claim_path = pick(organs_n_limbs)
-		name = initial(to_claim_path.name)
+		name = "[organ_target.real_name]'s [initial(to_claim_path.name)]"
 
 	get_reward_cost()
 	reward_path = select_claim_reward()

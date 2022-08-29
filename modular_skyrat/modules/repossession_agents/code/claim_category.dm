@@ -17,7 +17,7 @@
 			bounty_path = pick(SSrepossession_agent.machine_bounties)
 			does_path_exist = locate(bounty_path) in SSrepossession_agent.current_bounty_objects
 		while(!does_path_exist)
-		new /datum/repo_claim(bounty_path, SSrepossession_agent.machine_bounties)
+		SSrepossession_agent.current_claims += new /datum/repo_claim(bounty_path, SSrepossession_agent.machine_bounties)
 
 /datum/repo_claim_category/items
 	name = "Item Category"
@@ -30,7 +30,7 @@
 			bounty_path = pick(SSrepossession_agent.item_bounties)
 			does_path_exist = locate(bounty_path) in SSrepossession_agent.current_bounty_objects
 		while(!does_path_exist)
-		new /datum/repo_claim(bounty_path, SSrepossession_agent.item_bounties)
+		SSrepossession_agent.current_claims += new /datum/repo_claim(bounty_path, SSrepossession_agent.item_bounties)
 
 /datum/repo_claim_category/organs
 	name = "Organ Category"
@@ -38,26 +38,17 @@
 /datum/repo_claim_category/organs/generate_our_claims()
 	var/list/target_list = get_target_list()
 	for(var/i in 1 to amount)
-		new /datum/repo_claim(repo_target = pick(target_list), override_difficulty = BOUNTY_TIER_HARD)
+		SSrepossession_agent.current_claims += new /datum/repo_claim(repo_target = pick(target_list), override_difficulty = BOUNTY_TIER_HARD)
 
 /datum/repo_claim_category/organs/proc/get_target_list()
-	var/list/datum/mind/owners = get_owners()
-	if(!dupe_search_range)
-		dupe_search_range = get_owners()
 	var/list/possible_targets = list()
 	for(var/datum/mind/possible_target in get_crewmember_minds())
 		var/target_area = get_area(possible_target.current)
-		if(possible_target in owners)
-			continue
 		if(!ishuman(possible_target.current))
 			continue
 		if(possible_target.current.stat == DEAD)
 			continue
-		if(!is_unique_objective(possible_target,dupe_search_range))
-			continue
 		if(!HAS_TRAIT(SSstation, STATION_TRAIT_LATE_ARRIVALS) && istype(target_area, /area/shuttle/arrival))
-			continue
-		if(possible_target in blacklist)
 			continue
 		if(SSticker.IsRoundInProgress() && istype(target_area, /area/centcom/interlink))
 			continue
