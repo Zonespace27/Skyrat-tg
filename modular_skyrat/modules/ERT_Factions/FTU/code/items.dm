@@ -137,3 +137,36 @@
 	ammo_type = /obj/item/ammo_casing/pulse/mm12
 	caliber = "12mm SAP-HE"
 	max_ammo = 12
+
+/obj/item/gun/ballistic/automatic/sniper_rifle/pulse
+	name = "\improper FTU big gun"
+	desc = "A long ranged weapon capable of loading specialist ammunition."
+	icon_state = "sniper"
+	w_class = WEIGHT_CLASS_BULKY
+	inhand_icon_state = "sniper"
+	worn_icon_state = null
+	fire_sound = 'sound/weapons/gun/sniper/shot.ogg'
+	fire_sound_volume = 90
+	vary_fire_sound = FALSE
+	load_sound = 'sound/weapons/gun/sniper/mag_insert.ogg'
+	rack_sound = 'sound/weapons/gun/sniper/rack.ogg'
+	suppressed_sound = 'sound/weapons/gun/general/heavy_shot_suppressed.ogg'
+	recoil = 2
+	weapon_weight = WEAPON_HEAVY
+	mag_type = /obj/item/ammo_box/magazine/pulse_sniper
+	fire_delay = 40
+	burst_size = 1
+	w_class = WEIGHT_CLASS_NORMAL
+	slot_flags = ITEM_SLOT_BACK
+	fire_select_modes = list(SELECT_SEMI_AUTOMATIC)
+	mag_display = TRUE
+	suppressor_x_offset = 3
+	suppressor_y_offset = 3
+
+/obj/item/ammo_box/magazine/pulse_sniper
+	name = "sniper rounds (.50)"
+	icon_state = ".50mag"
+	base_icon_state = ".50mag"
+	ammo_type = /obj/item/ammo_casing/p50
+	max_ammo = 6
+	caliber = "11.2mm" //god i need to make thse into defines some time
