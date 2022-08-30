@@ -89,7 +89,19 @@
 	icon = 'modular_skyrat/modules/sec_haul/icons/guns/ammo_cartridges.dmi'
 	icon_state = "si-casing"
 	caliber = "11.2mm"
-	projectile_type = /obj/projectile/bullet/pulse/m112
+	projectile_type = /obj/projectile/bullet/pulse/mm112
+
+/obj/item/ammo_casing/pulse/mm112/knock
+	name = "11.2x94mm biodegradable sabot"
+	desc = "A biodegradable 11.2mm casing for some obscure rifle."
+	icon_state = "si-casing"
+	projectile_type = /obj/projectile/bullet/pulse/mm112/knock
+
+/obj/item/ammo_casing/pulse/mm112/incend
+	name = "11.2x94mm biodegradable sabot"
+	desc = "A biodegradable 11.2mm casing for some obscure rifle."
+	icon_state = "si-casing"
+	projectile_type = /obj/projectile/bullet/incendiary/mm112
 
 /obj/projectile/bullet/pulse/mm112
 	name = "11.2x94mm \"Penetrator\" casing"
@@ -119,6 +131,12 @@
 	phasing_ignore_direct_target = FALSE
 	knockdown = 2.5 SECONDS
 	stun = 1 SECONDS
+
+/obj/projectile/bullet/pulse/mm112/knock/on_hit(atom/target, blocked, pierce_hit)
+	. = ..()
+	if(ismob(target))
+		var/mob/mob_target = target
+		mob_target.throw_at(get_ranged_target_turf(target, get_dir(src, get_step_away(target, src)), 2), 200, 4)
 
 /obj/projectile/bullet/incendiary/mm112
 	name = "11.2x94mm \"Firestarter\" casing"
@@ -168,13 +186,12 @@
 	smoke.start()
 	qdel(smoke) //And deleted again. Sad really.
 
+/datum/effect_system/fluid_spread/smoke/bad/white_phosphorus
+	effect_type = /obj/effect/particle_effect/fluid/smoke/bad/white_phosphorus
+
 /obj/effect/particle_effect/fluid/smoke/bad/white_phosphorus //war crime time
 	lifetime = 8 SECONDS
 
 /obj/effect/particle_effect/fluid/smoke/bad/white_phosphorus/smoke_mob(mob/living/carbon/smoker)
-	. = ..()
-	if(!.)
-		return
-
 	smoker.adjust_fire_stacks(2) //dunno
 	smoker.ignite_mob()

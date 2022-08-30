@@ -164,9 +164,20 @@
 	suppressor_y_offset = 3
 
 /obj/item/ammo_box/magazine/pulse_sniper
-	name = "sniper rounds (.50)"
+	name = "11.2mm \"Penetrator\" magazine"
+	desc = "A strange caliber, this magazine's painted with a red stripe."
 	icon_state = ".50mag"
 	base_icon_state = ".50mag"
-	ammo_type = /obj/item/ammo_casing/p50
-	max_ammo = 6
+	ammo_type = /obj/projectile/bullet/pulse/mm112
+	max_ammo = 10
 	caliber = "11.2mm" //god i need to make thse into defines some time
+
+/obj/item/ammo_box/magazine/pulse_sniper/fire
+	name = "11.2mm \"Firestarter\" magazine"
+	desc = "A strange caliber, this magazine's painted with an orange stripe."
+	ammo_type = /obj/projectile/bullet/incendiary/mm112
+
+/obj/item/ammo_box/magazine/pulse_sniper/knock
+	name = "11.2mm \"Knockdown\" magazine"
+	desc = "A strange caliber, this magazine's painted with a deep blue stripe."
+	ammo_type = /obj/projectile/bullet/pulse/mm112/knock
