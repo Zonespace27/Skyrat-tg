@@ -18,4 +18,13 @@
 /obj/item/device/repossession_beacon/ui_data(mob/user)
 	. = ..()
 	var/list/data = list()
+	var/list/current_claims = list()
+	for(var/datum/repo_claim/active_claim as anything in SSrepossession_agent.current_claims)
+		current_claims += list(list(
+			"name" = active_claim.name,
+			"reward_name" = initial(active_claim.reward_path.name),
+			"claim_location" = active_claim.claim_location,
+			"claimed" = active_claim.claimed
+		))
+	data["current_claims"] = current_claims
 	return data

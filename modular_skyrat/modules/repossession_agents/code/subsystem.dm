@@ -1,7 +1,7 @@
 SUBSYSTEM_DEF(repossession_agent)
 	name = "Repossession Agent"
 	flags = SS_KEEP_TIMING
-	wait = 10 SECONDS
+	wait = 10 MINUTES
 	runlevels = RUNLEVEL_GAME | RUNLEVEL_POSTGAME
 	/// List of all claim category datums, generated on initialize
 	var/list/claim_types = list()
@@ -107,6 +107,7 @@ SUBSYSTEM_DEF(repossession_agent)
 	. = ..()
 	for(var/type in subtypesof(/datum/repo_claim_category))
 		claim_types += new type
+	fire()
 
 /datum/controller/subsystem/repossession_agent/fire(resumed)
 	regenerate_claim_list()
@@ -117,7 +118,6 @@ SUBSYSTEM_DEF(repossession_agent)
 	current_bounty_objects = GLOB.repo_bounty_objects.Copy()
 	for(var/datum/repo_claim_category/claim_cat as anything in claim_types)
 		claim_cat.generate_our_claims()
-
 
 // Everything gets added to the list
 // For a bounty, game chooses from a static list of types

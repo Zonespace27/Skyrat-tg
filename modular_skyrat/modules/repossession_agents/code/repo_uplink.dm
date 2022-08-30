@@ -29,6 +29,7 @@
 			"name" = active_claim.name,
 			"reward_name" = initial(active_claim.reward_path.name),
 			"claim_location" = active_claim.claim_location,
-			"claimed" = active_claim.claimed
+			"claimed" = active_claim.claimed,
 		))
+	data["current_claims"] = current_claims
 	return data
