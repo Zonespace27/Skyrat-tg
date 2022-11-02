@@ -51,7 +51,7 @@
 
 /datum/story_actor/ghost/centcom_inspector
 	name = "Central Command Inspector"
-	actor_outfits = list(/datum/outfit/centcom_inspector)
+	actor_outfits = list(/datum/outfit/centcom_inspector,)
 	actor_info = "You are an inspector from Central Command on a surprise inspection of the station. Inspect things, pick out issues, and make a good report for CentCom."
 	actor_goal = "Inspect the station, make a report, and send it to CentCom when done."
 
