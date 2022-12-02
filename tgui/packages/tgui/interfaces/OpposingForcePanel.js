@@ -853,3 +853,63 @@ export const AdminTab = (props, context) => {
     </Stack>
   );
 };
+
+/**
+ * Take entire equipment tree
+ * and return a flat equipment list that matches search,
+ * sorted by name and only the first page.
+ * @param {any[]} equipment_list The entire equipment list
+ * @param {string} search The search term
+ * @returns {any[]} The flat list of equipment.
+ */
+const equipmentSearch = (equipment_list, search) => {
+  search = search.toLowerCase();
+
+  return flow([
+    (categories) => categories.map((category) => category.packs),
+    filter(
+      (pack) =>
+        pack.name?.toLowerCase().includes(search.toLowerCase()) ||
+        pack.desc?.toLowerCase().includes(search.toLowerCase())
+    ),
+    sortBy((pack) => pack.name),
+    (packs) => packs.slice(0, 25),
+  ])(equipment_list);
+};
+
+{
+  equipment_list.map((equipment_category) => (
+    <Stack.Item key={equipment_category.category}>
+      <Collapsible
+        title={equipment_category.category}
+        key={equipment_category.category}>
+        <Section>
+          {equipment_category.items.map((item) => (
+            <Section
+              title={item.name}
+              key={item.ref}
+              buttons={
+                <Button
+                  icon="check"
+                  color="good"
+                  content="Select"
+                  disabled={!can_edit}
+                  onClick={() =>
+                    act('select_equipment', {
+                      equipment_ref: item.ref,
+                    })
+                  }
+                />
+              }>
+              <LabeledList>
+                <LabeledList.Item label="Description">
+                  {item.description}
+                </LabeledList.Item>
+              </LabeledList>
+            </Section>
+          ))}
+        </Section>
+      </Collapsible>
+    </Stack.Item>
+  ));
+}

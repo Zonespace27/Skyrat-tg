@@ -190,22 +190,6 @@
 
 	data["equipment_issued"] = equipment_issued
 
-	data["equipment_list"] = list()
-	for(var/equipment_category in SSopposing_force.equipment_list)
-		var/category_items = list()
-		for(var/datum/opposing_force_equipment/opfor_equipment as anything in SSopposing_force.equipment_list[equipment_category])
-			category_items += list(list(
-				"ref" = REF(opfor_equipment),
-				"name" = opfor_equipment.name,
-				"description" = opfor_equipment.description,
-				"equipment_category" = opfor_equipment.category,
-				"admin_note" = opfor_equipment.admin_note,
-			))
-		data["equipment_list"] += list(list(
-			"category" = equipment_category,
-			"items" = category_items,
-		))
-
 	data["selected_equipment"] = list()
 	for(var/datum/opposing_force_selected_equipment/equipment as anything in selected_equipment)
 		var/list/equipment_data = list(
@@ -221,6 +205,28 @@
 			"admin_note" = equipment.opposing_force_equipment.admin_note,
 			)
 		data["selected_equipment"] += list(equipment_data)
+
+	return data
+
+
+/datum/opposing_force/ui_static_data(mob/user)
+	var/list/data = list()
+
+	data["equipment_list"] = list()
+	for(var/equipment_category in SSopposing_force.equipment_list)
+		var/category_items = list()
+		for(var/datum/opposing_force_equipment/opfor_equipment as anything in SSopposing_force.equipment_list[equipment_category])
+			category_items += list(list(
+				"ref" = REF(opfor_equipment),
+				"name" = opfor_equipment.name,
+				"description" = opfor_equipment.description,
+				"equipment_category" = opfor_equipment.category,
+				"admin_note" = opfor_equipment.admin_note,
+			))
+		data["equipment_list"] += list(list(
+			"category" = equipment_category,
+			"items" = category_items,
+		))
 
 	return data
 
